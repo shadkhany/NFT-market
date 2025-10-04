@@ -1,0 +1,296 @@
+// Prisma schema for NFT Marketplace
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  address   String   @unique
+  username  String?  @unique
+  email     String?  @unique
+  bio       String?
+  avatar    String?
+  banner    String?
+  verified  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  ownedNFTs      NFT[]         @relation("NFTOwner")
+  createdNFTs    NFT[]         @relation("NFTCreator")
+  collections    Collection[]
+  orders         Order[]       @relation("OrderSeller")
+  purchases      Order[]       @relation("OrderBuyer")
+  bids           Bid[]
+  offers         Offer[]
+  transactions   Transaction[]
+  notifications  Notification[]
+  favorites      Favorite[]
+
+  @@index([address])
+  @@index([username])
+}
+
+model Collection {
+  id              String   @id @default(uuid())
+  name            String
+  description     String?
+  slug            String   @unique
+  contractAddress String   @unique
+  chainId         Int
+  category        String?
+  banner          String?
+  logo            String?
+  verified        Boolean  @default(false)
+  floorPrice      Decimal? @db.Decimal(78, 0)
+  totalVolume     Decimal  @default(0) @db.Decimal(78, 0)
+  itemCount       Int      @default(0)
+  ownerCount      Int      @default(0)
+  royaltyBps      Int      @default(0)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Relations
+  owner  User   @relation(fields: [ownerId], references: [id])
+  ownerId String
+  nfts   NFT[]
+
+  @@index([contractAddress, chainId])
+  @@index([slug])
+  @@index([verified])
+}
+
+model NFT {
+  id              String   @id @default(uuid())
+  tokenId         String
+  contractAddress String
+  chainId         Int
+  tokenStandard   String   // ERC721 or ERC1155
+  name            String?
+  description     String?
+  image           String?
+  animation       String?
+  metadata        Json?
+  tokenURI        String?
+  supply          Int      @default(1)
+  mintedAt        DateTime?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Relations
+  owner       User       @relation("NFTOwner", fields: [ownerId], references: [id])
+  ownerId     String
+  creator     User       @relation("NFTCreator", fields: [creatorId], references: [id])
+  creatorId   String
+  collection  Collection @relation(fields: [collectionId], references: [id])
+  collectionId String
+
+  orders       Order[]
+  bids         Bid[]
+  offers       Offer[]
+  transactions Transaction[]
+  favorites    Favorite[]
+  attributes   NFTAttribute[]
+
+  @@unique([contractAddress, tokenId, chainId])
+  @@index([contractAddress, tokenId])
+  @@index([ownerId])
+  @@index([collectionId])
+}
+
+model NFTAttribute {
+  id         String @id @default(uuid())
+  traitType  String
+  value      String
+  displayType String?
+  
+  nft   NFT    @relation(fields: [nftId], references: [id], onDelete: Cascade)
+  nftId String
+
+  @@index([nftId])
+  @@index([traitType])
+}
+
+enum OrderType {
+  LISTING
+  AUCTION
+}
+
+enum OrderStatus {
+  ACTIVE
+  FILLED
+  CANCELLED
+  EXPIRED
+}
+
+model Order {
+  id              String      @id @default(uuid())
+  listingId       String?     @unique // On-chain listing ID
+  type            OrderType
+  status          OrderStatus @default(ACTIVE)
+  price           Decimal     @db.Decimal(78, 0)
+  startPrice      Decimal?    @db.Decimal(78, 0) // For auctions
+  amount          Int         @default(1)
+  startTime       DateTime    @default(now())
+  endTime         DateTime?
+  signature       String?     // For off-chain orders
+  salt            String?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  // Relations
+  seller   User   @relation("OrderSeller", fields: [sellerId], references: [id])
+  sellerId String
+  buyer    User?  @relation("OrderBuyer", fields: [buyerId], references: [id])
+  buyerId  String?
+  nft      NFT    @relation(fields: [nftId], references: [id])
+  nftId    String
+
+  bids         Bid[]
+  transactions Transaction[]
+
+  @@index([sellerId])
+  @@index([nftId])
+  @@index([status, endTime])
+}
+
+model Bid {
+  id        String   @id @default(uuid())
+  amount    Decimal  @db.Decimal(78, 0)
+  txHash    String?
+  createdAt DateTime @default(now())
+
+  // Relations
+  bidder  User   @relation(fields: [bidderId], references: [id])
+  bidderId String
+  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId String
+  nft     NFT    @relation(fields: [nftId], references: [id])
+  nftId   String
+
+  @@index([orderId])
+  @@index([bidderId])
+}
+
+model Offer {
+  id         String    @id @default(uuid())
+  price      Decimal   @db.Decimal(78, 0)
+  amount     Int       @default(1)
+  expiresAt  DateTime
+  signature  String?
+  accepted   Boolean   @default(false)
+  cancelled  Boolean   @default(false)
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  // Relations
+  offerer   User   @relation(fields: [offererId], references: [id])
+  offererId String
+  nft       NFT    @relation(fields: [nftId], references: [id])
+  nftId     String
+
+  @@index([nftId, expiresAt])
+  @@index([offererId])
+}
+
+enum TransactionType {
+  MINT
+  SALE
+  TRANSFER
+  BID
+  OFFER_ACCEPTED
+  LISTING_CREATED
+  LISTING_CANCELLED
+  AUCTION_SETTLED
+}
+
+model Transaction {
+  id        String          @id @default(uuid())
+  txHash    String          @unique
+  type      TransactionType
+  chainId   Int
+  from      String
+  to        String
+  amount    Decimal         @db.Decimal(78, 0)
+  gasUsed   String?
+  gasPrice  String?
+  blockNumber Int?
+  timestamp DateTime
+  createdAt DateTime        @default(now())
+
+  // Relations
+  user    User   @relation(fields: [userId], references: [id])
+  userId  String
+  nft     NFT?   @relation(fields: [nftId], references: [id])
+  nftId   String?
+  order   Order? @relation(fields: [orderId], references: [id])
+  orderId String?
+
+  @@index([txHash])
+  @@index([userId])
+  @@index([nftId])
+  @@index([timestamp])
+}
+
+enum NotificationType {
+  BID_RECEIVED
+  BID_OUTBID
+  OFFER_RECEIVED
+  OFFER_ACCEPTED
+  LISTING_SOLD
+  AUCTION_WON
+  AUCTION_ENDED
+  PRICE_DROP
+  NEW_LISTING
+}
+
+model Notification {
+  id        String           @id @default(uuid())
+  type      NotificationType
+  title     String
+  message   String
+  read      Boolean          @default(false)
+  metadata  Json?
+  createdAt DateTime         @default(now())
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+
+  @@index([userId, read])
+  @@index([createdAt])
+}
+
+model Favorite {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+  nft    NFT    @relation(fields: [nftId], references: [id], onDelete: Cascade)
+  nftId  String
+
+  @@unique([userId, nftId])
+  @@index([userId])
+  @@index([nftId])
+}
+
+model Analytics {
+  id              String   @id @default(uuid())
+  date            DateTime @unique
+  totalSales      Int      @default(0)
+  totalVolume     Decimal  @default(0) @db.Decimal(78, 0)
+  totalUsers      Int      @default(0)
+  totalListings   Int      @default(0)
+  avgSalePrice    Decimal  @default(0) @db.Decimal(78, 0)
+  uniqueBuyers    Int      @default(0)
+  uniqueSellers   Int      @default(0)
+  createdAt       DateTime @default(now())
+
+  @@index([date])
+}

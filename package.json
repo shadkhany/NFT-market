@@ -1,0 +1,18 @@
+{
+  "name": "nft-marketplace",
+  "version": "1.0.0",
+  "description": "NFT Marketplace - AWS EC2 Deployment Ready",
+  "private": true,
+  "scripts": {
+    "install:all": "cd backend && yarn install && cd ../frontend && yarn install",
+    "dev:backend": "cd backend && yarn dev",
+    "dev:frontend": "cd frontend && yarn dev",
+    "build:backend": "cd backend && yarn build",
+    "build:frontend": "cd frontend && yarn build",
+    "build:all": "yarn build:backend && yarn build:frontend"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "yarn": ">=1.22.0"
+  }
+}
