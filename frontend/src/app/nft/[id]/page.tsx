@@ -42,12 +42,15 @@ const nftData = {
   ],
 };
 
-export default function NFTDetailPage({ params }: { params: { id: string } }) {
+export default function NFTDetailPage({ params }: { params: Promise<{ id: string }> }) {
   // Mock wallet connection for UI demo
   const address = '';
   const isConnected = false;
   const [activeTab, setActiveTab] = useState<'details' | 'offers' | 'history'>('details');
   const [isLiked, setIsLiked] = useState(false);
+  
+  // Note: In Next.js 15, params is a Promise but we're using mock data anyway
+  // so we don't need to await it for this demo
 
   const handleBuy = async () => {
     if (!isConnected) {

@@ -309,10 +309,29 @@ pm2 save
 pm2 list  # Should show nft-backend running
 ```
 
-### Step 4: Check Backend is Running
+### Step 4: Verify Backend is Running
+
+**Check PM2 status:**
 ```bash
+pm2 list
+# Should show nft-backend with status "online"
+```
+
+**Test the backend:**
+```bash
+# This should return a 404 JSON response (which means backend is working!)
 curl http://localhost:4000/api
-# Should return something (not error)
+
+# Expected output:
+# {"message":"Cannot GET /api","error":"Not Found","statusCode":404}
+```
+
+**✅ If you see the JSON 404 error above, your backend is working correctly!** The 404 is expected because there's no handler at `/api` root. The actual API endpoints are at paths like `/api/nfts`, `/api/auth`, etc.
+
+**Check logs to confirm no errors:**
+```bash
+pm2 logs nft-backend --lines 20
+# Should show "Nest application successfully started" with no errors
 ```
 
 ---
