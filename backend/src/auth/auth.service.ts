@@ -39,6 +39,13 @@ export class AuthService {
   }
 
   /**
+   * Login/Verify signature - alias for verifySignature
+   */
+  async login(address: string, signature: string) {
+    return this.verifySignature({ address, signature });
+  }
+
+  /**
    * Verify signature and authenticate user
    * Creates user if doesn't exist
    */
