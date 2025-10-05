@@ -79,12 +79,15 @@ yarn install:all
 ```bash
 # Backend
 cp backend/.env.example backend/.env
-# Edit backend/.env with your database URL
+nano backend/.env
+# See ENV_SETUP_GUIDE.md for detailed instructions
 
 # Frontend  
 cp frontend/.env.production.example frontend/.env
-# Edit with API URL
+nano frontend/.env
 ```
+
+**📖 Need help with environment variables?** See [ENV_SETUP_GUIDE.md](./ENV_SETUP_GUIDE.md) for a complete guide!
 
 ### 3. Database
 ```bash
@@ -144,21 +147,27 @@ Access at: `http://YOUR_SERVER_IP`
 
 ## 🔐 Environment Variables
 
-### Backend (.env)
+**📖 Complete Setup Guide:** [ENV_SETUP_GUIDE.md](./ENV_SETUP_GUIDE.md)
+
+### Backend (.env) - Quick Reference
 ```env
-DATABASE_URL="postgresql://user:password@localhost:5432/nft_marketplace"
+# Required
+DATABASE_URL="postgresql://nftuser:password@localhost:5432/nft_marketplace"
 REDIS_HOST=localhost
-REDIS_PORT=6379
-JWT_SECRET=your-secret-key
-PORT=4000
-NODE_ENV=production
+JWT_SECRET=<generate with: openssl rand -base64 48>
+
+# Optional (for advanced features)
+PINATA_API_KEY=<from pinata.cloud>
+SEPOLIA_RPC_URL=<from alchemy.com>
 ```
 
-### Frontend (.env.production)
+### Frontend (.env.production) - Quick Reference
 ```env
 NEXT_PUBLIC_API_URL=http://YOUR_SERVER_IP:4000/api
 NEXT_PUBLIC_IPFS_GATEWAY=https://gateway.pinata.cloud/ipfs/
 ```
+
+See [ENV_SETUP_GUIDE.md](./ENV_SETUP_GUIDE.md) for detailed step-by-step instructions on getting and filling each variable.
 
 ## 📋 Features
 
