@@ -199,9 +199,11 @@ git --version
 ```bash
 # If you have your code on GitHub
 cd ~
-git clone git:github.com:YOUR_USERNAME/YOUR_REPO.git nft-marketplace
-cd nft-marketplace
+git clone https://github.com/YOUR_USERNAME/NFT-market.git
+cd NFT-market
 ```
+
+**Note:** The folder will be named `NFT-market` (your repo name). All commands below use this folder name.
 
 ### Option B: Upload from Local Machine
 ```bash
@@ -217,10 +219,12 @@ scp -i ~/Downloads/nft-marketplace-key.pem nft-marketplace.tar.gz ubuntu@YOUR_IP
 
 # Back to server terminal
 cd ~
-mkdir nft-marketplace
-tar -xzf nft-marketplace.tar.gz -C nft-marketplace
-cd nft-marketplace
+mkdir NFT-market
+tar -xzf nft-marketplace.tar.gz -C NFT-market
+cd NFT-market
 ```
+
+**Note:** If you used Git (Option A), skip the mkdir/tar commands above - you already have the `NFT-market` folder.
 
 ---
 
@@ -237,7 +241,7 @@ Copy the output - you'll use it as your JWT_SECRET.
 
 **Now create the .env file:**
 ```bash
-cd ~/nft-marketplace/backend
+cd ~/NFT-market/backend
 nano .env
 ```
 
@@ -295,7 +299,7 @@ SENTRY_DSN=
 
 ### Step 2: Install Dependencies and Build
 ```bash
-cd ~/nft-marketplace/backend
+cd ~/NFT-market/backend
 yarn install
 yarn prisma:generate
 yarn prisma:migrate
@@ -340,7 +344,7 @@ pm2 logs nft-backend --lines 20
 
 ### Step 1: Setup Environment Variables
 ```bash
-cd ~/nft-marketplace/frontend
+cd ~/NFT-market/frontend
 nano .env.production
 ```
 
@@ -352,7 +356,7 @@ NEXT_PUBLIC_IPFS_GATEWAY=https://gateway.pinata.cloud/ipfs/
 
 ### Step 2: Install Dependencies and Build
 ```bash
-cd ~/nft-marketplace/frontend
+cd ~/NFT-market/frontend
 yarn install
 yarn build
 ```
@@ -476,7 +480,7 @@ pm2 restart all
 
 ### Update Application
 ```bash
-cd ~/nft-marketplace
+cd ~/NFT-market
 
 # Pull latest changes (if using Git)
 git pull

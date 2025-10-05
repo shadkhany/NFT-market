@@ -49,7 +49,7 @@ Before running these scripts:
 
 1. **AWS EC2 instance** running Ubuntu 22.04
 2. **SSH access** to the server
-3. **Project files** uploaded to `~/nft-marketplace/`
+3. **Project files** uploaded to `~/NFT-market/`
 4. **Environment files** created:
    - `backend/.env`
    - `frontend/.env.production`
@@ -162,7 +162,7 @@ Check password in `backend/.env` matches what you set in `database-setup.sh`
 ### Frontend build fails with memory error
 The script includes memory optimization. If still failing:
 ```bash
-cd ~/nft-marketplace/frontend
+cd ~/NFT-market/frontend
 NODE_OPTIONS="--max-old-space-size=4096" yarn build
 ```
 
@@ -190,7 +190,7 @@ sudo lsof -i :4000
 
 After making code changes:
 ```bash
-cd ~/nft-marketplace
+cd ~/NFT-market
 
 # Pull changes (if using Git)
 git pull
