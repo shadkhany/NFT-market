@@ -5,10 +5,6 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'via.placeholder.com',
-      },
-      {
-        protocol: 'https',
         hostname: 'gateway.pinata.cloud',
       },
       {
@@ -16,6 +12,9 @@ const nextConfig = {
         hostname: '**.ipfs.dweb.link',
       },
     ],
+    // Disable image optimization for placeholder images to avoid DNS issues
+    unoptimized: false,
+    dangerouslyAllowSVG: true,
   },
   // Production optimizations
   compiler: {
@@ -25,6 +24,8 @@ const nextConfig = {
   env: {
     NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
   },
+  // Output standalone for better deployment
+  output: 'standalone',
 }
 
 module.exports = nextConfig

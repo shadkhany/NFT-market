@@ -3,12 +3,13 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { TrendingUp, TrendingDown } from 'lucide-react';
+import { NFT_PLACEHOLDER } from '@/lib/placeholder';
 
 const collections = [
   {
     id: '1',
     name: 'Cosmic Dreams',
-    image: 'https://via.placeholder.com/100',
+    image: NFT_PLACEHOLDER,
     floorPrice: '2.5',
     volume: '1,250',
     change: 15.3,
@@ -17,7 +18,7 @@ const collections = [
   {
     id: '2',
     name: 'Digital Horizons',
-    image: 'https://via.placeholder.com/100',
+    image: NFT_PLACEHOLDER,
     floorPrice: '1.8',
     volume: '890',
     change: -5.2,
@@ -26,7 +27,7 @@ const collections = [
   {
     id: '3',
     name: 'Neon Nights',
-    image: 'https://via.placeholder.com/100',
+    image: NFT_PLACEHOLDER,
     floorPrice: '3.2',
     volume: '2,100',
     change: 22.7,

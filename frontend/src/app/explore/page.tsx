@@ -3,12 +3,13 @@
 import { useState } from 'react';
 import { NFTCard } from '@/components/NFTCard';
 import { Filter, SlidersHorizontal } from 'lucide-react';
+import { NFT_PLACEHOLDER } from '@/lib/placeholder';
 
 // Mock data
 const nfts = Array.from({ length: 12 }, (_, i) => ({
   id: String(i + 1),
   name: `Artwork #${i + 1}`,
-  image: 'https://via.placeholder.com/400',
+  image: NFT_PLACEHOLDER,
   price: (Math.random() * 5 + 0.1).toFixed(2),
   collection: ['Cosmic Dreams', 'Digital Horizons', 'Neon Nights'][i % 3],
   likes: Math.floor(Math.random() * 200),

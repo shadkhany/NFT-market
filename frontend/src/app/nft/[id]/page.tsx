@@ -4,17 +4,18 @@ import { useState } from 'react';
 import Image from 'next/image';
 import { Heart, Share2, MoreVertical, Clock, Tag, TrendingUp } from 'lucide-react';
 import { toast } from 'react-hot-toast';
+import { NFT_PLACEHOLDER, PLACEHOLDER_AVATAR } from '@/lib/placeholder';
 
 // Mock data - replace with actual data fetching
 const nftData = {
   id: '1',
   name: 'Cosmic Dreams #4521',
   description: 'A unique piece from the Cosmic Dreams collection, featuring abstract patterns and vibrant colors that represent the infinite possibilities of the universe.',
-  image: 'https://via.placeholder.com/600',
+  image: NFT_PLACEHOLDER,
   owner: {
     address: '0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb',
     name: 'CryptoArtist',
-    avatar: 'https://via.placeholder.com/40',
+    avatar: PLACEHOLDER_AVATAR,
   },
   creator: {
     address: '0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb',

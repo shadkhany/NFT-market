@@ -1,13 +1,14 @@
 'use client';
 
 import { NFTCard } from './NFTCard';
+import { NFT_PLACEHOLDER } from '@/lib/placeholder';
 
 // Mock data - replace with actual API call
 const featuredNFTs = [
   {
     id: '1',
     name: 'Cosmic Dreams #4521',
-    image: 'https://via.placeholder.com/400',
+    image: NFT_PLACEHOLDER,
     price: '2.5',
     collection: 'Cosmic Dreams',
     likes: 142,
@@ -16,7 +17,7 @@ const featuredNFTs = [
   {
     id: '2',
     name: 'Digital Horizons #891',
-    image: 'https://via.placeholder.com/400',
+    image: NFT_PLACEHOLDER,
     price: '1.8',
     collection: 'Digital Horizons',
     likes: 98,
@@ -25,7 +26,7 @@ const featuredNFTs = [
   {
     id: '3',
     name: 'Neon Nights #2341',
-    image: 'https://via.placeholder.com/400',
+    image: NFT_PLACEHOLDER,
     price: '3.2',
     collection: 'Neon Nights',
     likes: 203,
@@ -34,7 +35,7 @@ const featuredNFTs = [
   {
     id: '4',
     name: 'Abstract Minds #7654',
-    image: 'https://via.placeholder.com/400',
+    image: NFT_PLACEHOLDER,
     price: '0.9',
     collection: 'Abstract Minds',
     likes: 67,
