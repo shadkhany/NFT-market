@@ -199,7 +199,7 @@ git --version
 ```bash
 # If you have your code on GitHub
 cd ~
-git clone https://github.com/YOUR_USERNAME/YOUR_REPO.git nft-marketplace
+git clone git:github.com:YOUR_USERNAME/YOUR_REPO.git nft-marketplace
 cd nft-marketplace
 ```
 
@@ -227,12 +227,35 @@ cd nft-marketplace
 ## Part 6: Backend Deployment
 
 ### Step 1: Setup Environment Variables
+
+**First, generate a secure JWT secret:**
+```bash
+# Generate a secure random string (64 characters)
+openssl rand -base64 48
+```
+Copy the output - you'll use it as your JWT_SECRET.
+
+**Now create the .env file:**
 ```bash
 cd ~/nft-marketplace/backend
 nano .env
 ```
 
-Paste this content (press Ctrl+X, then Y, then Enter to save):
+**Get your server's public IP:**
+```bash
+curl -s ifconfig.me
+```
+This will show your AWS server's public IP (e.g., 3.89.123.45). You'll need this for CORS_ORIGIN.
+
+**Now paste this content into nano:**
+
+Replace these values:
+- `your_secure_password_here` → Database password from Step 4
+- `PASTE_GENERATED_SECRET_HERE` → JWT secret you just generated
+- `YOUR_IP` → Your server's public IP from the command above
+
+Press Ctrl+X, then Y, then Enter to save.
+
 ```env
 # Database
 DATABASE_URL="postgresql://nftuser:your_secure_password_here@localhost:5432/nft_marketplace?schema=public"
@@ -242,14 +265,14 @@ REDIS_HOST=localhost
 REDIS_PORT=6379
 
 # JWT
-JWT_SECRET=your_super_secret_jwt_key_change_this_in_production
+JWT_SECRET=PASTE_GENERATED_SECRET_HERE
 JWT_EXPIRES_IN=7d
 
 # Server
 PORT=4000
 NODE_ENV=production
 
-# CORS
+# CORS (Replace YOUR_IP with your server's public IP)
 CORS_ORIGIN=http://YOUR_IP:3000
 
 # Blockchain (Use a testnet for free tier)
