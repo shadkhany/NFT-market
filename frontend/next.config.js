@@ -12,9 +12,8 @@ const nextConfig = {
         hostname: '**.ipfs.dweb.link',
       },
     ],
-    // Disable image optimization for placeholder images to avoid DNS issues
-    unoptimized: false,
     dangerouslyAllowSVG: true,
+    contentDispositionType: 'inline',
   },
   // Production optimizations
   compiler: {
@@ -24,8 +23,6 @@ const nextConfig = {
   env: {
     NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
   },
-  // Output standalone for better deployment
-  output: 'standalone',
 }
 
 module.exports = nextConfig
